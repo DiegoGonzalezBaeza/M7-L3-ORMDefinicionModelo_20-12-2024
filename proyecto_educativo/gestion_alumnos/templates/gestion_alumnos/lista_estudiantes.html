@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista 2 de Estudiantes</title>
+    <style>
+        .resultados {
+            margin-top: 10px;
+        }
+        .resultados li {
+            margin: 5px 0;
+        }
+    </style>
+    <script>
+        async function buscarEstudiantes() {
+            const query = document.getElementById('busqueda').value;
+            const resultadosDiv = document.getElementById('resultados');
+            resultadosDiv.innerHTML = ''; // Limpiar resultados previos
+
+            if (query.length > 2) {
+                const response = await fetch(`/estudiantes/buscar/?q=${query}`);
+                const data = await response.json();
+
+                if (data.resultados.length > 0) {
+                    data.resultados.forEach(estudiante => {
+                        resultadosDiv.innerHTML += `
+                            <li>
+                                ${estudiante.nombre} ${estudiante.apellido} - 
+                                <a href="#" onclick="mostrarDetalles(${estudiante.id})">Ver detalles</a>
+                            </li>
+                        `;
+                    });
+                } else {
+                    resultadosDiv.innerHTML = '<li>No se encontraron resultados</li>';
+                }
+            }
+        }
+
+        async function mostrarDetalles(id) {
+            const response = await fetch(`/estudiantes/detalles/${id}/`);
+            const data = await response.text();
+            document.getElementById('detalle').innerHTML = data;
+        }
+    </script>
+</head>
+<body>
+    <h1>Lista de Estudiantes</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Promedio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estudiante in estudiantes %}
+                <tr>
+                    <td>{{ estudiante.id }}</td>
+                    <td>{{ estudiante.nombre }}</td>
+                    <td>{{ estudiante.apellido }}</td>
+                    <td>{{ estudiante.email }}</td>
+                    <td>{{ estudiante.fecha_nacimiento }}</td>
+                    <td>{{ estudiante.promedio }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+
+    <a href="{% url 'crear_estudiante' %}">Agregar nuevo estudiante</a>
+
+    <h3>Buscar Estudiante</h3>
+    <input type="text" id="busqueda" placeholder="Buscar por nombre o apellido" onkeyup="buscarEstudiantes()" />
+    <ul id="resultados" class="resultados"></ul>
+
+    <h3>Detalles del Estudiante</h3>
+    <div id="detalle"></div>
+
+    <a href="{% url 'index' %}">Volver al inicio</a>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!-- gestion_alumnos/templates/gestion_alumnos/seleccionar_estudiante.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles del Estudiante</title>
+</head>
+<body>
+    <h1>Detalles del Estudiante</h1>
+    <p><strong>Nombre:</strong> {{ estudiante.nombre }}</p>
+    <p><strong>Apellido:</strong> {{ estudiante.apellido }}</p>
+    <p><strong>Fecha de Nacimiento:</strong> {{ estudiante.fecha_nacimiento }}</p>
+    <p><strong>Email:</strong> {{ estudiante.email }}</p>
+    <a href="{% url 'lista_estudiantes' %}">Volver a la lista de estudiantes</a>
+</body>
+</html>
